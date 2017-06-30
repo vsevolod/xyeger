@@ -1,10 +1,10 @@
 module Xyeger
   module Formatters
-    class Json < Base
+    class Values < Base
       def call(*args)
         result = super(*args)
 
-        result.compact.to_json + "\n"
+        result.values.join(' ') + "\n"
       end
     end
   end

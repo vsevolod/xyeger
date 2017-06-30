@@ -1,6 +1,6 @@
 module Xyeger
   module Formatters
-    class Json < Base
+    class KeyValue < Base
       def call(*args)
         result = super(*args)
 

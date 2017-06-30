@@ -32,6 +32,21 @@ Rails.application.configure do
   config.xyeger.enabled = true
 end
 ```
+|          Formatter             |   Description    | Options |
+| ------------------------------ | ---------------- | ------- |
+| `Xyeger::Formatters::Base`   | Default format   | colored |
+| `Xyeger::Formatters::Json`   | json             | colored |
+| `Xyeger::Formatters::Values` | show only values | colored |
+
+Set formatter:
+```ruby
+config.xyeger.formatter = Xyeger::Formatters::Values.new
+```
+
+For colored output use option `colored` (gem [Paint](https://github.com/janlelis/paint))
+```ruby
+config.xyeger.formatter = Xyeger::Formatters::Values.new(colored: true)
+```
 
 ## Output results
 

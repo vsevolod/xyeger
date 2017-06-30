@@ -32,6 +32,8 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
 
   spec.add_dependency 'lograge', '>= 0.4'
+  spec.add_dependency 'paint', '~> 2.0'
+
   spec.add_runtime_dependency 'activesupport', '>= 4'
   spec.add_runtime_dependency 'actionpack', '>= 4'
   spec.add_runtime_dependency 'railties', '>= 4'

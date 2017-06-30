@@ -1,6 +1,8 @@
 require 'active_support/logger'
 require 'active_support/dependencies/autoload'
 require 'active_support/ordered_options'
+require 'paint'
+require 'lograge'
 require "xyeger/version"
 
 module Xyeger
@@ -16,6 +18,7 @@ module Xyeger
 
     app.config.logger = Logger.new(app.config.xyeger.output)
     Rails.logger = app.config.logger
+    Rails.logger.formatter = app.config.xyeger.formatter
   end
 
   def setup_lograge(app)
