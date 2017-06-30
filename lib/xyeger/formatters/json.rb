@@ -5,7 +5,7 @@ module Xyeger
         message, context = prepare(message, context)
 
         {
-          logger: ENV.fetch('LOGGER_HOSTNAME', $0),
+          logger: ENV.fetch('XYEGER_HOSTNAME', $0),
           pid: $$,
           app: Rails.application.class.parent_name,
           env: Rails.env,

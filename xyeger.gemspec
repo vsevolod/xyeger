@@ -18,7 +18,7 @@ Gem::Specification.new do |spec|
   # Prevent pushing this gem to RubyGems.org. To allow pushes either set the 'allowed_push_host'
   # to allow pushing to a single host or delete this section to allow pushing to any host.
   if spec.respond_to?(:metadata)
-    spec.metadata['allowed_push_host'] = 'http://mygemserver.com'
+    spec.metadata['allowed_push_host'] = 'https://rubygems.org'
   else
     raise "RubyGems 2.0 or newer is required to protect against " \
       "public gem pushes."
@@ -31,10 +31,10 @@ Gem::Specification.new do |spec|
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
 
-  spec.add_dependency 'lograge'
-  spec.add_runtime_dependency 'activesupport'
-  spec.add_runtime_dependency 'actionpack'
-  spec.add_runtime_dependency 'railties'
+  spec.add_dependency 'lograge', '>= 0.4'
+  spec.add_runtime_dependency 'activesupport', '>= 4'
+  spec.add_runtime_dependency 'actionpack', '>= 4'
+  spec.add_runtime_dependency 'railties', '>= 4'
 
   spec.add_development_dependency "bundler", "~> 1.14"
   spec.add_development_dependency "rake", "~> 10.0"
