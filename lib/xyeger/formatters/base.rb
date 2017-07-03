@@ -11,11 +11,13 @@ module Xyeger
       def call(severity, timestamp, context, message)
         message, context = prepare(message, context)
 
+        context = Xyeger.config.filter.filter(context) if Xyeger.config.filter
+
         result = {
-          logger: Xyeger.config&.hostname || ENV['XYEGER_HOSTNAME'],
-          pid: $$,
-          app: Rails.application.class.parent_name,
-          env: Rails.env,
+          hostname: Xyeger.config.hostname,
+          pid: Xyeger.config.pid,
+          app: Xyeger.config.app,
+          env: Xyeger.config.env,
           level: severity,
           time: timestamp,
           caller: caller_message(caller_locations),
@@ -35,6 +37,11 @@ module Xyeger
       end
 
       private def prepare(message, context)
+        new_message = attributes[:message].call(message, context) if attributes[:message]
+        new_context = attributes[:context].call(message, context) if attributes[:context]
+
+        return [new_message, new_context] if attributes[:message] || attributes[:context]
+
         case message
         when LogrageRaw
           ['Lograge', message.data]

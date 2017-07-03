@@ -21,15 +21,21 @@ module Xyeger
       @config ||= Xyeger::Config.new()
 
       yield(@config)
+
+      if @config.filter_parameters
+        @config.filter ||= ActionDispatch::Http::ParameterFilter.new(@config.filter_parameters)
+      end
+      Xyeger.setup
     end
   end
 
-  def setup(app)
+  def setup
+    app = Rails.application
     setup_lograge(app)
 
-    app.config.logger = Logger.new(app.config.xyeger.output)
+    app.config.logger = Logger.new(config.output)
     Rails.logger = app.config.logger
-    Rails.logger.formatter = app.config.xyeger.formatter
+    Rails.logger.formatter = config.formatter
   end
 
   def setup_lograge(app)
@@ -41,5 +47,3 @@ module Xyeger
     Lograge.setup(app)
   end
 end
-
-require 'xyeger/railtie' if defined?(Rails)

@@ -25,11 +25,11 @@ Add environments:
 XYEGER_HOSTNAME='LoggerApplication' #f.e.: rails, sidekiq, sneakers
 ```
 
-Add into environment file:
+Add into initializer file:
 ```ruby
-#config/environments/production.rb
-Rails.application.configure do
-  config.xyeger.enabled = true
+#config/initializers/xyeger.rb
+Xyeger.configure do |config|
+  config.filter_parameters = Rails.application.config.filter_parameters
 end
 ```
 |          Formatter           |   Description    | Options |
@@ -38,9 +38,18 @@ end
 | `Xyeger::Formatters::Json`   | default format   | colored |
 | `Xyeger::Formatters::Values` | show only values | colored |
 
-Set formatter:
+Default options:
 ```ruby
-config.xyeger.formatter = Xyeger::Formatters::Values.new
+#config/initializers/xyeger.rb
+Xyeger.configure do |config|
+  config.output = STDOUT
+  config.formatter = Xyeger::Formatters::Values.new
+  config.filter_parameters = Rails.application.config.filter_parameters
+  config.hostname = ENV['XYEGER_HOSTNAME']
+  config.pid = $$
+  config.app = Rails.application.class.parent_name
+  config.env = Rails.env
+end
 ```
 
 For colored output use option `colored` (gem [Paint](https://github.com/janlelis/paint))
@@ -119,6 +128,42 @@ Rails.logger.info('Logger message', { content: '1', params: 'b' })
 }
 
 ```
+
+## Grape usage
+WIth ```gem 'grape_logging'```
+```ruby
+class Root < Grape::API
+  # Message: {
+  #  "status":200,
+  #  "time":
+  #  {
+  #    "total":86.84,
+  #    "db":15.27,
+  #    "view":71.57
+  #  },
+  #  "method":"GET",
+  #  "path":"/api/v2/tickers",
+  #  "params":{"password":"[FILTERED]","a":"b"},
+  #  "ip":"127.0.0.1",
+  #  "ua":"Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:54.0) Gecko/20100101 Firefox/54.0"
+  #}
+  formatter = Xyeger::Formatters::Json.new(
+    message: ->(message, _context) { "#{message[:method]} #{message[:path]}" },
+    context: ->(message, _context) { message }
+  )
+
+  use GrapeLogging::Middleware::RequestLogger,
+    logger: logger,
+    formatter: formatter,
+    include: [
+      GrapeLogging::Loggers::Response.new,
+      GrapeLogging::Loggers::FilterParameters.new,
+      GrapeLogging::Loggers::ClientEnv.new
+    ]
+end
+```
+
+
 ## License
 
 The gem is available as open source under the terms of the [MIT License](http://opensource.org/licenses/MIT).

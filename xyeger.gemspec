@@ -12,7 +12,7 @@ Gem::Specification.new do |spec|
 
   spec.summary       = 'Uniq logger for project'
   spec.description   = 'Uniq logger for project'
-  spec.homepage      = ''
+  spec.homepage      = 'https://github.com/vsevolod/xyeger'
   spec.license       = 'MIT'
 
   # Prevent pushing this gem to RubyGems.org. To allow pushes either set the 'allowed_push_host'
