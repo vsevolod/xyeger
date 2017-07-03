@@ -32,10 +32,10 @@ Rails.application.configure do
   config.xyeger.enabled = true
 end
 ```
-|          Formatter             |   Description    | Options |
-| ------------------------------ | ---------------- | ------- |
-| `Xyeger::Formatters::Base`   | Default format   | colored |
-| `Xyeger::Formatters::Json`   | json             | colored |
+|          Formatter           |   Description    | Options |
+| ---------------------------- | ---------------- | ------- |
+| `Xyeger::Formatters::Base`   |                  | colored |
+| `Xyeger::Formatters::Json`   | default format   | colored |
 | `Xyeger::Formatters::Values` | show only values | colored |
 
 Set formatter:

@@ -7,7 +7,7 @@ module Xyeger
     config.xyeger = ActiveSupport::OrderedOptions.new
     config.xyeger.enabled = false
     config.xyeger.output = STDOUT
-    config.xyeger.formatter = Xyeger::Formatters::Base.new
+    config.xyeger.formatter = Xyeger::Formatters::Json.new
 
     config.after_initialize do |app|
       Xyeger.setup(app) if app.config.xyeger.enabled

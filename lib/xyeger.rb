@@ -3,15 +3,26 @@ require 'active_support/dependencies/autoload'
 require 'active_support/ordered_options'
 require 'paint'
 require 'lograge'
-require "xyeger/version"
+require 'xyeger/version'
 
 module Xyeger
   module_function
 
   extend ActiveSupport::Autoload
 
+  autoload :Config
   autoload :Logger
   autoload :Formatters
+
+  class << self
+    attr_reader :config
+
+    def configure
+      @config ||= Xyeger::Config.new()
+
+      yield(@config)
+    end
+  end
 
   def setup(app)
     setup_lograge(app)
