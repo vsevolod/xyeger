@@ -163,6 +163,14 @@ class Root < Grape::API
 end
 ```
 
+## Sidekiq usage
+
+```ruby
+# config/initializers/sidekiq.rb
+Sidekiq::Logging.logger = Xyeger::Logger.new(STDOUT)
+Sidekiq::Logging.logger.formatter = Xyeger::Formatters::SidekiqJson.new
+```
+
 
 ## License
 

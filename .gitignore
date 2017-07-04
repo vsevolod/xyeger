@@ -1,2 +1,4 @@
 .rspec
 .travis.yml
+.rspec_status
+*.gem

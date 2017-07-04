@@ -11,7 +11,7 @@ module Xyeger
       def call(severity, timestamp, context, message)
         message, context = prepare(message, context)
 
-        context = Xyeger.config.filter.filter(context) if Xyeger.config.filter
+        context = filter_context(context)
 
         result = {
           hostname: Xyeger.config.hostname,
@@ -56,6 +56,12 @@ module Xyeger
         result.each_with_index do |(key, value), index|
           result[key] = Paint[value, colors[index]]
         end
+      end
+
+      private def filter_context(context)
+        return context unless Xyeger.config.filter && context.is_a?(Hash)
+
+        Xyeger.config.filter.filter(context)
       end
     end
   end
