@@ -5,7 +5,6 @@ module Xyeger
         context, message = prepare_message(message) unless context
 
         super(severity, timestamp, context, message).merge(
-          pid: ::Process.pid,
           tid: "TID-#{Thread.current.object_id.to_s(36)}",
           sidekiq_context: sidekiq_context
         ).to_json + "\n"

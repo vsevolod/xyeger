@@ -46,7 +46,6 @@ Xyeger.configure do |config|
   config.formatter = Xyeger::Formatters::Values.new
   config.filter_parameters = Rails.application.config.filter_parameters
   config.hostname = ENV['XYEGER_HOSTNAME']
-  config.pid = $$
   config.app = Rails.application.class.parent_name
   config.env = Rails.env
 end

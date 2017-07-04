@@ -15,7 +15,7 @@ module Xyeger
 
         result = {
           hostname: Xyeger.config.hostname,
-          pid: Xyeger.config.pid,
+          pid: $$,
           app: Xyeger.config.app,
           env: Xyeger.config.env,
           level: severity,
