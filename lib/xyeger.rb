@@ -34,8 +34,10 @@ module Xyeger
     setup_lograge(app)
 
     app.config.logger = Logger.new(config.output)
+    log_level = Rails.logger.level
     Rails.logger = app.config.logger
     Rails.logger.formatter = config.formatter
+    Rails.logger.level = log_level
   end
 
   def setup_lograge(app)
