@@ -1,12 +1,15 @@
 module Xyeger
   module Formatters
     class Base
+      include ActiveSupport::TaggedLogging::Formatter
+
       UNCOLORIZE_REGEXP = /\e\[([;\d]+)?m/
 
       attr_reader :attributes, :colors
 
       def initialize(attributes = {})
         @attributes = attributes
+        @tags = []
         @colors = Array.new(9) { Paint.random } if attributes[:colored]
       end
 
@@ -26,6 +29,7 @@ module Xyeger
           context: context
         }
 
+        result[:tags] = current_tags if current_tags.any?
         colored(result) if attributes[:colored]
 
         result

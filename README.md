@@ -169,6 +169,30 @@ end
 Sidekiq::Logging.logger.formatter = Xyeger::Formatters::SidekiqJson.new
 ```
 
+## TaggedLogging example
+
+```ruby
+Rails.logger.tagged('main', 'object_id') { Rails.logger.info('Message text', { id: 33 }) }
+```
+```json
+{
+  "pid" : 9210,
+  "app" : "Cryptopay",
+  "env" : "development",
+  "level" : "INFO",
+  "time" : "2017-07-18T19:42:53.373+03:00",
+  "message" : "Message text",
+  "context" : {
+    "id" : 33
+  },
+  "tags" : [
+    "main",
+    "object_id"
+  ]
+}
+```
+
+
 ## License
 
 The gem is available as open source under the terms of the [MIT License](http://opensource.org/licenses/MIT).
