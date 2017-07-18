@@ -1,6 +1,10 @@
 module Xyeger
-  class Logger < ActiveSupport::Logger
-    Logger::Severity.constants.each do |severity|
+  module Logger
+    def self.extended(base)
+      base.formatter = Xyeger.config.formatter if Xyeger.config
+    end
+
+    ActiveSupport::Logger::Severity.constants.each do |severity|
       define_method severity.downcase do |message=nil, context=nil, &block|
         context, message = message, context if message.is_a?(Hash)
 
@@ -13,7 +17,7 @@ module Xyeger
             message = result
           end
         end
-        add(Logger::Severity.const_get(severity), message, context)
+        add(ActiveSupport::Logger::Severity.const_get(severity), message, context)
       end
     end
   end

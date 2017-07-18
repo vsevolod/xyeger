@@ -69,7 +69,7 @@ module Xyeger
       end
 
       def uncolorize(message)
-        message.gsub(UNCOLORIZE_REGEXP, '')
+        message.to_s.gsub(UNCOLORIZE_REGEXP, '')
       end
     end
   end
