@@ -22,7 +22,6 @@ module Xyeger
           env: Xyeger.config.env,
           level: severity,
           time: timestamp,
-          caller: caller_message(caller_locations),
           message: message,
           context: context
         }
@@ -30,12 +29,6 @@ module Xyeger
         colored(result) if attributes[:colored]
 
         result
-      end
-
-      private def caller_message(callers)
-        if location = callers.find{|x| x.path.include?(Rails.root.to_s)}
-          "#{location.path}:#{location.lineno}"
-        end
       end
 
       private def prepare(message, context)
