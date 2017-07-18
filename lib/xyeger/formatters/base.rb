@@ -15,6 +15,7 @@ module Xyeger
 
       def call(severity, timestamp, context, message)
         message, context = prepare(message, context)
+        message = uncolorize(message) unless attributes[:colored]
 
         context = filter_context(context)
 
@@ -36,8 +37,6 @@ module Xyeger
       end
 
       private def prepare(message, context)
-        message = uncolorize(message) unless attributes[:colored]
-
         new_message = attributes[:message].call(message, context) if attributes[:message]
         new_context = attributes[:context].call(message, context) if attributes[:context]
 
