@@ -170,6 +170,13 @@ Sidekiq::Logging.logger = Xyeger::Logger.new(STDOUT)
 Sidekiq::Logging.logger.formatter = Xyeger::Formatters::SidekiqJson.new
 ```
 
+## ActiveRecord usage
+
+```ruby
+# config/initializers/xyeger.rb
+ActiveRecord::Base.logger = Rails.logger
+```
+
 
 ## License
 

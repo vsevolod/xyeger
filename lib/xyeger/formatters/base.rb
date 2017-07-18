@@ -1,6 +1,8 @@
 module Xyeger
   module Formatters
     class Base
+      UNCOLORIZE_REGEXP = /\e\[([;\d]+)?m/
+
       attr_reader :attributes, :colors
 
       def initialize(attributes = {})
@@ -37,6 +39,8 @@ module Xyeger
       end
 
       private def prepare(message, context)
+        message = uncolorize(message) unless attributes[:colored]
+
         new_message = attributes[:message].call(message, context) if attributes[:message]
         new_context = attributes[:context].call(message, context) if attributes[:context]
 
@@ -62,6 +66,10 @@ module Xyeger
         return context unless Xyeger.config.filter && context.is_a?(Hash)
 
         Xyeger.config.filter.filter(context)
+      end
+
+      def uncolorize(message)
+        message.gsub(UNCOLORIZE_REGEXP, '')
       end
     end
   end
