@@ -51,11 +51,6 @@ Xyeger.configure do |config|
 end
 ```
 
-For colored output use option `colored` (gem [Paint](https://github.com/janlelis/paint))
-```ruby
-config.xyeger.formatter = Xyeger::Formatters::Values.new(colored: true)
-```
-
 ## Output results
 
 ### Http request

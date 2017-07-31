@@ -5,23 +5,22 @@ module Xyeger
 
       UNCOLORIZE_REGEXP = /\e\[([;\d]+)?m/
 
-      attr_reader :attributes, :colors
+      attr_reader :attributes
 
       def initialize(attributes = {})
         @attributes = attributes
         @tags = []
-        @colors = Array.new(9) { Paint.random } if attributes[:colored]
       end
 
       def call(severity, timestamp, context, message)
         message, context = prepare(message, context)
-        message = uncolorize(message) unless attributes[:colored]
+        message = uncolorize(message)
 
         context = filter_context(context)
 
         result = {
           hostname: Xyeger.config.hostname,
-          pid: $$,
+          pid: $PROCESS_ID,
           app: Xyeger.config.app,
           env: Xyeger.config.env,
           level: severity,
@@ -31,8 +30,6 @@ module Xyeger
         }
 
         result[:tags] = current_tags if current_tags.any?
-        colored(result) if attributes[:colored]
-
         result
       end
 
@@ -49,12 +46,6 @@ module Xyeger
           ['StandardError', { class: message.class.name, error: message.to_s }]
         else
           [message.to_s, context]
-        end
-      end
-
-      private def colored(result)
-        result.each_with_index do |(key, value), index|
-          result[key] = Paint[value, colors[index]]
         end
       end
 
