@@ -66,7 +66,7 @@ curl localhost:3000 -G -d a=3
  "level": "INFO",
  "time": "2017-06-29T15:42:14.761+03:00",
  "caller": null,
- "msg": "Lograge message",
+ "msg": "some message",
  "context":
   {"method": "GET",
    "path": "/",

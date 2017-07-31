@@ -5,7 +5,6 @@ module Xyeger
     autoload :Base
     autoload :Json
     autoload :Values
-    autoload :LogrageRaw
     autoload :SidekiqJson
   end
 end

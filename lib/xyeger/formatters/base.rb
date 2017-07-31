@@ -20,7 +20,7 @@ module Xyeger
 
         result = {
           hostname: Xyeger.config.hostname,
-          pid: $PROCESS_ID,
+          pid: $$, # rubocop:disable Style/SpecialGlobalVars
           app: Xyeger.config.app,
           env: Xyeger.config.env,
           level: severity,
@@ -40,8 +40,6 @@ module Xyeger
         return [new_message, new_context] if attributes[:message] || attributes[:context]
 
         case message
-        when LogrageRaw
-          ['Lograge', message.data]
         when ::StandardError
           ['StandardError', { class: message.class.name, error: message.to_s }]
         else
