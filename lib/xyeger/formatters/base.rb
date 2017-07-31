@@ -30,7 +30,12 @@ module Xyeger
         }
 
         result[:tags] = current_tags if current_tags.any?
-        result
+
+        if attributes[:except]&.any?
+          result.except(*attributes[:except])
+        else
+          result
+        end
       end
 
       private def prepare(message, context)

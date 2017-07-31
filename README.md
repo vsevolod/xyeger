@@ -32,11 +32,11 @@ Xyeger.configure do |config|
   config.filter_parameters = Rails.application.config.filter_parameters
 end
 ```
-|          Formatter           |   Description    | Options |
-| ---------------------------- | ---------------- | ------- |
-| `Xyeger::Formatters::Base`   |                  | colored |
-| `Xyeger::Formatters::Json`   | default format   | colored |
-| `Xyeger::Formatters::Values` | show only values | colored |
+|          Formatter           |   Description    |
+| ---------------------------- | ---------------- |
+| `Xyeger::Formatters::Base`   |                  |
+| `Xyeger::Formatters::Json`   | default format   |
+| `Xyeger::Formatters::Values` | show only values |
 
 Default options:
 ```ruby
@@ -48,6 +48,13 @@ Xyeger.configure do |config|
   config.hostname = ENV['XYEGER_HOSTNAME']
   config.app = Rails.application.class.parent_name
   config.env = Rails.env
+end
+```
+
+For exclude some values from log use option `except`
+```ruby
+if Rails.env.development?
+  config.formatter = Xyeger::Formatters::Values.new(except: [:hostname, :pid, :app, :env, :level])
 end
 ```
 
