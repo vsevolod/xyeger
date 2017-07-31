@@ -5,7 +5,7 @@ module Xyeger
     end
 
     ActiveSupport::Logger::Severity.constants.each do |severity|
-      define_method severity.downcase do |message=nil, context=nil, &block|
+      define_method severity.downcase do |message = nil, context = nil, &block|
         context, message = message, context if message.is_a?(Hash)
 
         if block

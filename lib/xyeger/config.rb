@@ -1,12 +1,6 @@
 module Xyeger
   class Config
-    attr_accessor :output,
-                  :formatter,
-                  :filter_parameters,
-                  :filter,
-                  :hostname,
-                  :app,
-                  :env
+    attr_accessor :output, :formatter, :filter_parameters, :filter, :hostname, :app, :env
 
     def initialize
       @output = STDOUT
