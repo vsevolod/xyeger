@@ -18,7 +18,7 @@ module Xyeger
       def prepare_message(message)
         json = JSON.parse(message)
         [filter_context(json), 'Sidekiq']
-      rescue JSON::ParserError => e
+      rescue JSON::ParserError
         [nil, message]
       end
     end
