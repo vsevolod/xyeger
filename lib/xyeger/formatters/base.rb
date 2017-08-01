@@ -15,9 +15,6 @@ module Xyeger
       def call(severity, timestamp, context, message)
         message, context = prepare(message, context)
         message = uncolorize(message)
-
-        context = filter_context(context)
-
         result = {
           hostname: Xyeger.config.hostname,
           pid: $$, # rubocop:disable Style/SpecialGlobalVars
@@ -39,23 +36,12 @@ module Xyeger
       end
 
       private def prepare(message, context)
-        new_message = attributes[:message].call(message, context) if attributes[:message]
-        new_context = attributes[:context].call(message, context) if attributes[:context]
-
-        return [new_message, new_context] if attributes[:message] || attributes[:context]
-
         case message
         when ::StandardError
           ['StandardError', { class: message.class.name, error: message.to_s }]
         else
           [message.to_s, context]
         end
-      end
-
-      private def filter_context(context)
-        return context unless Xyeger.config.filter && context.is_a?(Hash)
-
-        Xyeger.config.filter.filter(context)
       end
 
       def uncolorize(message)
