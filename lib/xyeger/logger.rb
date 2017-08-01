@@ -1,24 +1,24 @@
 module Xyeger
   module Logger
     def self.extended(base)
-      base.formatter = Xyeger.config.formatter if Xyeger.config
+      base.formatter = Xyeger.config.formatter
     end
 
-    ActiveSupport::Logger::Severity.constants.each do |severity|
-      define_method severity.downcase do |message = nil, context = nil, &block|
-        context, message = message, context if message.is_a?(Hash)
+    def add(severity, message = nil, progname = nil, &block)
+      message = prepare(message, progname, &block)
+      super(severity, message, Xyeger.context.current)
+    end
 
-        if block
-          result = block.call
-
-          if result.is_a?(Hash)
-            context = result
-          else
-            message = result
-          end
+    def prepare(message, progname, &block)
+      if message.nil?
+        if block_given?
+          message = yield(block)
+        else
+          message = progname
+          progname = nil
         end
-        add(ActiveSupport::Logger::Severity.const_get(severity), message, context)
       end
+      Xyeger.config.message_resolver.call(message, progname)
     end
   end
 end

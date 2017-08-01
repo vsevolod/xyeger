@@ -1,15 +1,17 @@
 module Xyeger
   class Config
-    attr_accessor :output, :formatter, :filter_parameters, :filter, :hostname, :app, :env
+    attr_accessor :output, :formatter, :hostname, :app, :env, :context_resolver, :message_resolver
+    attr_reader :context
 
     def initialize
       @output = STDOUT
       @formatter = Xyeger::Formatters::Json.new
-      @filter_parameters = Rails.application.config.filter_parameters
-
-      @hostname = ENV['XYEGER_HOSTNAME']
-      @app = Rails.application.class.parent_name
-      @env = Rails.env
+      @hostname = ENV['XYEGER_HOSTNAME'] || ''
+      @app = ENV['XYEGER_APPNAME'] || ''
+      @env = ENV['XYEGER_ENV'] || ''
+      @context = Xyeger::Context
+      @context_resolver = Xyeger::ContextResolver
+      @message_resolver = Xyeger::MessageResolver
     end
   end
 end
