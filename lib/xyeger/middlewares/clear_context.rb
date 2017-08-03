@@ -1,6 +1,6 @@
 module Xyeger
   module Middlewares
-    class ClearContex
+    class ClearContext
       def initialize(app)
         @app = app
       end
