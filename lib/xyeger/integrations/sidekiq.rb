@@ -18,7 +18,7 @@ module Xyeger
       end
     end
 
-    class FlowIdMiddlware
+    class FlowIdMiddleware
       def call(_worker_class, msg, _queue, _redis_pool)
         msg['fid'] = Xyeger.context.current[:fid]
         yield
