@@ -11,7 +11,7 @@ module Xyeger
     def self.add_context(context = {})
       return unless context
       context = Xyeger.config.context_resolver.call(context)
-      Raven.tags_context(context) if defined?(Raven)
+      Raven.tags_context(context) if defined?(::Raven)
       Thread.current[:xyeger_context] ||= {}
       Thread.current[:xyeger_context].merge!(context || {})
     end
