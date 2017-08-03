@@ -19,7 +19,7 @@ module Xyeger
     def configure
       require 'xyeger/integrations/rails' if defined?(Rails)
       require 'xyeger/integrations/sidekiq' if defined?(Sidekiq)
-      require 'xyeger/integrations/grape' if defined?(Sidekiq)
+      require 'xyeger/integrations/grape' if defined?(Grape)
       @config ||= Xyeger::Config.new
       yield(@config)
     end

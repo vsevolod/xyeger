@@ -8,7 +8,7 @@ module Xyeger
         # attribute to expose the underlying thing.
         klass = job_hash['wrapped'] || job_hash['class']
         jid = job_hash['jid']
-        fid = job_hash['fid'] || Xyeger.context[:fid] || SecureRandom.uuid
+        fid = job_hash['fid'] || Xyeger.context.current[:fid] || SecureRandom.uuid
 
         Xyeger.add_context(worker: klass, fid: fid, jid: jid)
 
@@ -20,9 +20,7 @@ module Xyeger
 
     class FlowIdMiddlware
       def call(_worker_class, msg, _queue, _redis_pool)
-        msg['fid'] = msg['fid'] || Xyeger.context[:fid] || SecureRandom.uuid
-        Xyeger.add_context(fid: msg['fid'])
-
+        msg['fid'] = Xyeger.context.current[:fid]
         yield
       end
     end
@@ -34,12 +32,6 @@ end
 ::Sidekiq::Logging.singleton_class.prepend(Xyeger::Sidekiq::LoggingPatch)
 
 ::Sidekiq.configure_client do |config|
-  config.client_middleware do |chain|
-    chain.add(Xyeger::Sidekiq::FlowIdMiddleware)
-  end
-end
-
-::Sidekiq.configure_server do |config|
   config.client_middleware do |chain|
     chain.add(Xyeger::Sidekiq::FlowIdMiddleware)
   end
