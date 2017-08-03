@@ -1,3 +1,5 @@
+require 'rails'
+
 module Xyeger
   module Rails
     class FlowIdMiddleware
