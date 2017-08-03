@@ -20,7 +20,7 @@ module Xyeger
 
   class Railtie < ::Rails::Railtie
     initializer 'xyeger.configure_rails_initialization' do |app|
-      Rails.logger.info('INITIALIZATION OF XYEGER')
+      puts 'INITIALIZATION OF XYEGER'
       app.config.middleware.insert_after(
         ActionDispatch::RequestId, Xyeger::Middlewares::ClearContext
       )
