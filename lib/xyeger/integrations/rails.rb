@@ -16,7 +16,7 @@ module Xyeger
     end
   end
 
-  class Rails < ::Rails::Railtie
+  class Railtie < ::Rails::Railtie
     initializer 'xyeger.configure_rails_initialization' do |app|
       app.config.middleware.insert_after(
         ActionDispatch::RequestId, Xyeger::Middlewares::ClearContext
