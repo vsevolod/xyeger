@@ -1,20 +1,18 @@
 module Xyeger
   class Context
-    def initialize
-      Thread.current[:xyeger_context] = {}
+    def self.current
+      Thread.current[:xyeger_context] ||= {}
     end
 
-    def add_context(context = nil)
+    def self.clear_context
+      Thread.current[:xyeger_context] = nil
+    end
+
+    def self.add_context(context = {})
+      return unless context
       context = Xyeger.config.context_resolver.call(context)
+      Raven.extra_context(context) if defined?(Raven)
       Thread.current[:xyeger_context].merge!(context || {})
-    end
-
-    def clear_context
-      Thread.current[:xyeger_context] = {}
-    end
-
-    def to_hash
-      Thread.current[:xyeger_context]
     end
   end
 end

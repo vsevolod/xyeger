@@ -16,20 +16,40 @@ Or install it yourself as:
 
     $ gem install xyeger
 
-## Usage
+## Basic Usage
+Xyeger Logger was created to be suitable with ElasticSearch logs, so when you log anything you will get JSON representation of your message. 
+
+```ruby
+  require 'active_support'
+  logger = ActiveSupport::Logger.new(STDOUT)
+  logger.extend(Xyeger::Logger)
+  logger.info('Some message')
+```
+
+It was found out that just JSON-looking logs does not solve the problem of tracking request flow. So context was added. 
+
+You
+
 
 ### Configuration
 
 Add environments:
 ```bash
-XYEGER_HOSTNAME='LoggerApplication' #f.e.: rails, sidekiq, sneakers
+XYEGER_HOSTNAME='localhost' #f.e.: rails, sidekiq, sneakers
+XYEGER_APPNAME='some_service'
+XYEGER_ENV='staging'
 ```
 
 Add into initializer file:
 ```ruby
 #config/initializers/xyeger.rb
 Xyeger.configure do |config|
-  config.filter_parameters = Rails.application.config.filter_parameters
+  config.output = STDOUT # default
+  config.formatter = MyCustomFormatter # default to Xyeger::Formatters::Json.new
+  config.app = Rails.application.class.parent_name # default to ENV['XYEGER_APPNAME'] or emtpy string
+  config.env = Rails.env # default to ENV['XYEGER_ENV'] or empty string
+  config.context_resolver = MyContextResolver # ContextResolver class
+  config.message_resolver = MyMessageResolver # MessageResolver class
 end
 ```
 |          Formatter           |   Description    |
@@ -37,26 +57,8 @@ end
 | `Xyeger::Formatters::Base`   |                  |
 | `Xyeger::Formatters::Json`   | default format   |
 | `Xyeger::Formatters::Values` | show only values |
+| `Xyeger::Formatters::Text`   | show text form   |
 
-Default options:
-```ruby
-#config/initializers/xyeger.rb
-Xyeger.configure do |config|
-  config.output = STDOUT
-  config.formatter = Xyeger::Formatters::Values.new
-  config.filter_parameters = Rails.application.config.filter_parameters
-  config.hostname = ENV['XYEGER_HOSTNAME']
-  config.app = Rails.application.class.parent_name
-  config.env = Rails.env
-end
-```
-
-For exclude some values from log use option `except`
-```ruby
-if Rails.env.development?
-  config.formatter = Xyeger::Formatters::Values.new(except: [:hostname, :pid, :app, :env, :level])
-end
-```
 
 ## Output results
 

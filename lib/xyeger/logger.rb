@@ -1,13 +1,12 @@
 module Xyeger
   module Logger
-    def add(severity, message = '', context = {})
-      Xyeger.add_context(context)
-      if message.is_a?(Hash)
-        Xyeger.add_context(message)
-        message = ''
-      end
-      context = Xyeger.context.to_hash
-      super(severity, message, context)
+    def self.extended(base)
+      base.formatter = Xyeger.config.formatter
+    end
+
+    def add(severity, message = '', progname = nil)
+      message = Xyeger.config.message_resolver.call(message, progname)
+      super(severity, message, Xyeger.context.current)
     end
   end
 end

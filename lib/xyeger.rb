@@ -4,6 +4,7 @@ require 'xyeger/version'
 require 'xyeger/config'
 require 'xyeger/context'
 require 'xyeger/context_resolver'
+require 'xyeger/message_resolver'
 require 'xyeger/formatters'
 require 'xyeger/logger'
 require 'xyeger/middlewares/clear_context'
@@ -16,6 +17,9 @@ module Xyeger
     extend Forwardable
 
     def configure
+      require 'xyeger/integrations/rails' if defined?(Rails)
+      require 'xyeger/integrations/sidekiq' if defined?(Sidekiq)
+      require 'xyeger/integrations/grape' if defined?(Sidekiq)
       @config ||= Xyeger::Config.new
       yield(@config)
     end

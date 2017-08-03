@@ -2,18 +2,18 @@ module Xyeger
   module Formatters
     class Text < Base
       def call(*args)
-        hash = super(*args)
+        result = super(*args)
         arr = []
-        arr << "[#{hash[:time]}]"
-        arr << "[#{hash[:level]}]".ljust(8)
+        arr << "[#{result[:time]}]"
+        arr << "[#{result[:level]}]".ljust(8)
 
-        context = args[:context]
+        context = result[:context]
         arr << "[#{fid}] " if context[:fid]
 
         arr << context.except(:fid).map { |k, v| "#{k}=#{v}" }.join(' ')
-        arr << message.to_s if message
+        arr << result[:message]
 
-        "#{arr.join(' ')}\n"
+        "#{arr.join(' ').gsub(/ +/, ' ')}\n"
       end
     end
   end

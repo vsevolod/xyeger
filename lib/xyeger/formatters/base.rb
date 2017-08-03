@@ -13,19 +13,8 @@ module Xyeger
       end
 
       def call(severity, timestamp, context, message)
-        message, context = prepare(message, context)
         message = uncolorize(message)
-        result = {
-          hostname: Xyeger.config.hostname,
-          pid: $$, # rubocop:disable Style/SpecialGlobalVars
-          app: Xyeger.config.app,
-          env: Xyeger.config.env,
-          level: severity,
-          time: timestamp,
-          message: message,
-          context: context
-        }
-
+        result = prepare(severity, timestamp, context, message)
         result[:tags] = current_tags if current_tags.any?
 
         if attributes[:except]&.any?
@@ -35,13 +24,17 @@ module Xyeger
         end
       end
 
-      private def prepare(message, context)
-        case message
-        when ::StandardError
-          ['StandardError', { class: message.class.name, error: message.to_s }]
-        else
-          [message.to_s, context]
-        end
+      def prepare(severity, timestamp, context, message)
+        {
+          hostname: Xyeger.config.hostname,
+          pid: $$, # rubocop:disable Style/SpecialGlobalVars
+          app: Xyeger.config.app,
+          env: Xyeger.config.env,
+          level: severity,
+          time: timestamp,
+          message: message,
+          context: context
+        }
       end
 
       def uncolorize(message)
