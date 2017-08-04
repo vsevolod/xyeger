@@ -10,9 +10,9 @@ module Xyeger
       def call(env)
         request = ActionDispatch::Request.new(env)
         fid = request.request_id || SecureRandom.uuid
-
+        puts "#{fid} for context"
         Xyeger.add_context(fid: fid)
-
+        puts "current context: #{Xyeger.context.current}"
         @app.call(env)
       end
     end
@@ -20,7 +20,6 @@ module Xyeger
 
   class Railtie < ::Rails::Railtie
     initializer 'xyeger.configure_rails_initialization' do |app|
-      puts 'INITIALIZATION OF XYEGER'
       app.config.middleware.insert_after(
         ActionDispatch::RequestId, Xyeger::Middlewares::ClearContext
       )
