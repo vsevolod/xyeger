@@ -30,6 +30,9 @@ Style/BlockDelimiters:
 Style/Documentation:
   Enabled: false
 
+Style/DoubleNegation:
+  Enabled: false
+
 Style/FirstParameterIndentation:
   EnforcedStyle: consistent
 
