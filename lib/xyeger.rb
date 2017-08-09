@@ -10,7 +10,6 @@ require 'xyeger/logger'
 require 'xyeger/middlewares/clear_context'
 require 'xyeger/integrations/rails' if defined?(::Rails)
 require 'xyeger/integrations/sidekiq' if defined?(::Sidekiq)
-require 'xyeger/integrations/grape' if defined?(::Grape)
 
 module Xyeger
   module_function
