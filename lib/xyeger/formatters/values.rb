@@ -4,7 +4,7 @@ module Xyeger
       def call(*args)
         result = super(*args)
 
-        result.values.join(' ') + "\n"
+        result.values.join(' ').gsub(/ +/, ' ') + "\n"
       end
     end
   end

@@ -1,10 +1,4 @@
-module Xyeger
-  module Formatters
-    extend ActiveSupport::Autoload
-
-    autoload :Base
-    autoload :Json
-    autoload :Values
-    autoload :SidekiqJson
-  end
-end
+require 'xyeger/formatters/base'
+require 'xyeger/formatters/json'
+require 'xyeger/formatters/text'
+require 'xyeger/formatters/values'

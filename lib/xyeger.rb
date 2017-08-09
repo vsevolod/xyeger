@@ -1,30 +1,30 @@
-require 'active_support/logger'
 require 'active_support/tagged_logging'
-require 'active_support/dependencies/autoload'
-require 'active_support/ordered_options'
+require 'forwardable'
 require 'xyeger/version'
+require 'xyeger/config'
+require 'xyeger/context'
+require 'xyeger/context_resolver'
+require 'xyeger/message_resolver'
+require 'xyeger/formatters'
+require 'xyeger/logger'
+require 'xyeger/middlewares/clear_context'
+require 'xyeger/integrations/rails' if defined?(::Rails)
+require 'xyeger/integrations/sidekiq' if defined?(::Sidekiq)
 
 module Xyeger
   module_function
 
-  extend ActiveSupport::Autoload
-
-  autoload :Config
-  autoload :Logger
-  autoload :Formatters
-
   class << self
     attr_reader :config
+    extend Forwardable
 
     def configure
       @config ||= Xyeger::Config.new
-
       yield(@config)
-
-      if @config.filter_parameters
-        @config.filter ||= ActionDispatch::Http::ParameterFilter.new(@config.filter_parameters)
-      end
-      Rails.logger.extend(Logger)
     end
+
+    def_delegator :config, :context
+    def_delegator :context, :add_context
+    def_delegator :context, :clear_context
   end
 end
