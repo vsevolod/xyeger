@@ -4,11 +4,11 @@ module Xyeger
       message =
         case message
         when ::StandardError
-          [message.class.name, message].join(' ')
+          [message.class.name, message].compact.join(' ')
         else
           message.to_s
         end
-      [progname, message].join(' ')
+      [progname, message].compact.join(' ')
     end
   end
 end
