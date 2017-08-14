@@ -25,14 +25,20 @@ module Xyeger
       end
     end
   end
-end
 
-::Sidekiq.logger = Rails.logger
+  class SidekiqRailtie < ::Rails::Railtie
+    config.after_initialize do
+      ::Sidekiq.logger = ::Rails.logger
+      ::Sidekiq.logger.formatter = Xyeger::Formatters::Json.new
 
-::Sidekiq::Logging.singleton_class.prepend(Xyeger::Sidekiq::LoggingPatch)
+      ::Sidekiq::Logging.singleton_class.prepend(Xyeger::Sidekiq::LoggingPatch)
 
-::Sidekiq.configure_client do |config|
-  config.client_middleware do |chain|
-    chain.add(Xyeger::Sidekiq::FlowIdMiddleware)
+      ::Sidekiq.configure_client do |config|
+        config.client_middleware do |chain|
+          chain.add(Xyeger::Sidekiq::FlowIdMiddleware)
+        end
+      end
+    end
   end
 end
+

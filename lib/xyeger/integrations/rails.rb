@@ -3,13 +3,15 @@ require 'rails'
 module Xyeger
   module Rails
     class FlowIdMiddleware
+      REQUEST_HEADER = 'X-Custom-CrossService-RequestId'.freeze
+
       def initialize(app)
         @app = app
       end
 
       def call(env)
         request = ActionDispatch::Request.new(env)
-        fid = request.request_id || SecureRandom.uuid
+        fid = request.headers[REQUEST_HEADER] || SecureRandom.uuid
         Xyeger.add_context(fid: fid)
         @app.call(env)
       end
@@ -29,7 +31,8 @@ module Xyeger
     config.after_initialize do
       ::Rails.logger = ActiveSupport::Logger.new(STDOUT)
       ::Rails.logger.extend(Xyeger::Logger)
-      ::ActiveSupport.on_load(:action_record) { self.logger = ::Rails.logger }
+      ::ActiveSupport.on_load(:action_view) { self.logger = ::Rails.logger }
+      ::ActiveSupport.on_load(:active_record) { self.logger = ::Rails.logger }
     end
   end
 end
