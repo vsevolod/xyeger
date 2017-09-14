@@ -29,8 +29,6 @@ module Xyeger
     end
 
     config.after_initialize do
-      ::Rails.logger = ActiveSupport::Logger.new(STDOUT)
-      ::Rails.logger.extend(Xyeger::Logger)
       ::ActiveSupport.on_load(:action_view) { self.logger = ::Rails.logger }
       ::ActiveSupport.on_load(:active_record) { self.logger = ::Rails.logger }
     end

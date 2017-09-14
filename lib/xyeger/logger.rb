@@ -1,7 +1,13 @@
 module Xyeger
-  module Logger
-    def self.extended(base)
-      base.formatter = Xyeger.config.formatter
+  class Logger < ActiveSupport::Logger
+    def initialize(*args)
+      super
+
+      Xyeger.configure do |config|
+        config.output = args.first
+      end
+
+      @formatter = Xyeger.config.formatter
     end
 
     def add(severity, message = nil, progname = nil, &block)
