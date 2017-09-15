@@ -1,12 +1,7 @@
 require 'spec_helper'
 
 RSpec.describe Xyeger::Logger do
-  subject(:logger) { ActiveSupport::Logger.new(STDOUT) }
-
-  before do
-    logger.formatter = Xyeger::Formatters::Json.new
-    logger.extend(described_class)
-  end
+  subject(:logger) { Xyeger::Logger.new(STDOUT) }
 
   describe '#info' do
     let(:info) { ::Logger::Severity::INFO }

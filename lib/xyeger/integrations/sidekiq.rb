@@ -28,9 +28,6 @@ module Xyeger
 
   class SidekiqRailtie < ::Rails::Railtie
     config.after_initialize do
-      ::Sidekiq.logger = ::Rails.logger
-      ::Sidekiq.logger.formatter = Xyeger::Formatters::Json.new
-
       ::Sidekiq::Logging.singleton_class.prepend(Xyeger::Sidekiq::LoggingPatch)
 
       ::Sidekiq.configure_client do |config|
@@ -41,4 +38,3 @@ module Xyeger
     end
   end
 end
-

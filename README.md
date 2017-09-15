@@ -19,6 +19,7 @@
   - [Grape](#grape)
   - [Sidekiq](#sidekiq)
   - [Sentry](#sentry)
+  - [Puma](#puma)
   - [Plain ruby app](#plain-ruby-app)
 ## Basic Usage
 Xyeger Logger was created to be suitable with ElasticSearch logs, so when you log anything you will get JSON representation of your message. 
@@ -69,12 +70,20 @@ XYEGER_APPNAME='some_service'
 XYEGER_ENV='staging'
 ```
 
-Add into initializer file:
+Add into environment file:
 
 ```ruby
-#config/initializers/xyeger.rb
+#config/environments/production.rb
+Rails.application.configure do |config|
+  config.logger = Xyeger::Logger.new(STDOUT)
+end
+```
+
+Add into initializers file additional configuration if needed:
+
+```ruby
+#config/initializer/xyeger.rb
 Xyeger.configure do |config|
-  config.output = STDOUT                      # default to STDOUT
   config.formatter = MyCustomFormatter        # default to Xyeger::Formatters::Json.new
   config.app = ''                             # default to ENV['XYEGER_APPNAME'] or emtpy string
   config.env = Rails.env                      # default to ENV['XYEGER_ENV'] or empty string
@@ -118,7 +127,7 @@ class MyContextResolver
       { user_id: object.uuid }
     end
   end
-end  
+end
 
 Xyeger.configure { config.context_resolver = MyContextResolver }
 
@@ -256,23 +265,41 @@ end
 ```
 
 ### Sidekiq
-Sidekiq integration is really useful too. It store `fid` inside job and you can track logs even for retries. You don't have to do anything extra.
+Sidekiq integration is really useful too. It store `fid` inside job and you can track logs even for retries.
+You need to set manual logger for sidekiq:
+
+```ruby
+#config/initializers/sidekiq.rb
+...
+Sidekiq.logger = Rails.logger
+```
 
 ### Sentry
 Sentry integration is hardcoded inside gem. So when you add anything inside context of Xyeger, it also means that you add something to Sentry context.
+
+### Puma
+Puma webserver use Events for logging.
+```ruby
+#bin/puma
+#!/usr/bin/env ruby
+
+require 'puma/cli'
+require 'xyeger/integrations/puma'
+
+cli = Puma::CLI.new ARGV, Xyeger::Puma.events
+
+cli.run
+```
 
 ### Plain ruby app
 For plain ruby application you have implement several steps:
 
 ```ruby
-# Configure your Xyeger
+# Additional configure your Xyeger
 Xyeger.configure {}
 
 # Create instance of some logger
-logger = Logger.new(STDOUT)
-
-# Extend your logger with Xyeger::Logger
-logger.extend(Xyeger::Logger)
+logger = Xyeger::Logger.new(STDOUT)
 
 # You are ready to go
 logger.info('Some message')
